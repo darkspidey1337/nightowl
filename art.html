@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Night Owl Art</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="p-6">
+    <header class="mb-6">
+        <a href="./" class="flex items-center gap-3 w-fit">
+            <img src="images/logo.jpeg" alt="Night Owl Art logo" class="w-10 h-10 rounded-full object-cover">
+            <span class="text-xl font-bold">Night Owl Art</span>
+        </a>
+    </header>
+
+    <div id="art-detail"></div>
+
+    <script>
+        const id = new URLSearchParams(window.location.search).get('id');
+        fetch('data/art.jsonl')
+            .then(res => res.text())
+            .then(text => {
+                const items = text.trim().split('\n').filter(Boolean).map(line => JSON.parse(line));
+                const item = items.find(i => i.id === id);
+                const detail = document.getElementById('art-detail');
+                if (!item) {
+                    detail.innerHTML = '<p>Art piece not found.</p>';
+                    return;
+                }
+                document.title = `${item.title} — Night Owl Art`;
+                detail.innerHTML = `
+                    <img src="${item.image}" alt="${item.title}" class="max-w-full h-auto rounded-lg mb-4">
+                    <h1 class="text-2xl font-bold mb-2">${item.title}</h1>
+                    <p class="text-gray-500 mb-2">${item.date}</p>
+                    <p>${item.description}</p>
+                `;
+            });
+    </script>
+</body>
+
+</html>

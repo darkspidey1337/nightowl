@@ -16,11 +16,27 @@
         </a>
     </header>
 
-    <p class="mb-4">Hello, my name is Liam. I am the art director of the game, Windrunners. I always take my time making
+    <p class="mb-6">Hello, my name is Liam. I am the art director of the game, Windrunners. I always take my time making
         art. Please enjoy
         my pictures.</p>
 
-    <img src="images/IMG_2416.jpg" alt="Picture of a Salamander" class="max-w-full h-auto">
+    <div id="gallery" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4"></div>
+
+    <script>
+        fetch('data/art.jsonl')
+            .then(res => res.text())
+            .then(text => {
+                const items = text.trim().split('\n').filter(Boolean).map(line => JSON.parse(line));
+                const gallery = document.getElementById('gallery');
+                items.forEach(item => {
+                    const link = document.createElement('a');
+                    link.href = `art.html?id=${encodeURIComponent(item.id)}`;
+                    link.className = 'block overflow-hidden rounded-lg';
+                    link.innerHTML = `<img src="${item.image}" alt="${item.title}" class="w-full aspect-square object-cover hover:scale-105 transition-transform duration-200">`;
+                    gallery.appendChild(link);
+                });
+            });
+    </script>
 </body>
 
 </html>
